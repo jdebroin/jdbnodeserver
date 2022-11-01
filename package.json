@@ -1,0 +1,17 @@
+{
+  "name": "jdbnodeserver",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app"
+  },
+  "dependencies": {
+    "express": "latest",
+    "ejs": "latest",
+    "serve-favicon": "latest",
+    "morgan": "latest",
+    "body-parser": "latest",
+    "method-override": "latest",
+    "errorhandler": "latest"
+  }
+}

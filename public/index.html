@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
+    <script>
+        function toggleLogs() {
+            var hidden = getLogs().style.display === 'none';
+            getLogs().style.display = (hidden ? 'block' : 'none');
+        }
+    </script>
+</head>
+<body>
+    <div style="position:fixed; top:0; height:100px; width:100%; z-index:99; background-color:rgba(255,255,255,1);">
+        <div>Status: <span id="status">unknown</span></div>
+        <br />
+        <input type="checkbox" checked id="show-logs" name="show-logs" onclick="toggleLogs()">
+        <label for="show-logs">Show logs</label>
+        <br />
+    </div>
+    <pre id="logs" style="position:absolute; top:100px;" />
+</body>
+</html>
+
