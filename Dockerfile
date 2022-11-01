@@ -1,5 +1,5 @@
 # parent image
-FROM node:8-stretch
+FROM node:18.12.0-bullseye
 
 # to make it easier to troubleshoot
 RUN apt-get update && apt-get install -y \
