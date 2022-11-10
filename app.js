@@ -38,6 +38,27 @@ app.get('/mock', function (req, res) {
 })
 
 
+app.get('/mockmtls', function (req, res) {
+    //var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    var ip = req.ip;
+    var delay = req.query.delay || 0;
+    var sslClientIssuer = req.headers['ssl_client_issuer'];
+    var sslClient = req.headers['ssl_client'];
+    var sslClientVerify = req.headers['ssl_client_verify'];
+
+    var r = Math.random() * (delay - 30) + 30;
+
+    console.log('/mock from=' + ip + ', sslClientIssuer=' + sslClientIssuer + ', sslClient=' + sslClient + ', sslClientVerify=' + sslClientVerify + ', delay=' + r);
+                         
+    setTimeout(function() {
+        var response = {
+            ok: "yes"
+        };
+        res.end(JSON.stringify(response));
+    }, r);
+})
+
+
 var options;
 
 if (proto === 'https') {

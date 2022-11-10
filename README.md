@@ -19,10 +19,10 @@ server {
 
         server_name $SITENAME
 
-        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-        ssl_prefer_server_ciphers on;
-        ssl_ciphers "EECDH+ECDSA+AESGCM:EECDH+aRSA+AESGCM:EECDH+ECDSA+SHA256:EECDH+aRSA+SHA256:EECDH+ECDSA+SHA384:EECDH+ECDSA+SHA256:EECDH+aRSA+SHA384:EDH+aRSA+AESGCM:EDH+aRSA+SHA256:EDH+aRSA:EECDH:!aNULL:!eNULL:!MEDIUM:!LOW:!3DES:!MD5:!EXP:!PSK:!SRP:!DSS:!RC4:!SEED";
-        add_header Strict-Transport-Security "max-age=31536000";
+	ssl_protocols           TLSv1.2 TLSv1.3;
+	ssl_ciphers             HIGH:!aNULL:!MD5;
+	ssl_prefer_server_ciphers on;
+	add_header Strict-Transport-Security "max-age=31536000";
 
         ssl_certificate /etc/certs/tls.crt;
         ssl_certificate_key /etc/certs/tls.key;
@@ -88,40 +88,44 @@ openssl x509 -in ca.crt -text -noout
 ```
 vim /etc/nginx/sites-enabled/$SITENAME
 server {
-    listen 443 ssl;
-    listen [::]:443 ssl;
+	listen 443 ssl;
+	listen [::]:443 ssl;
 
-    server_name $SITENAME
+	server_name $SITENAME
 
-    ssl_protocols           TLSv1.2 TLSv1.3;
-    ssl_ciphers             HIGH:!aNULL:!MD5;
-    ssl_prefer_server_ciphers on;
-    add_header Strict-Transport-Security "max-age=31536000";
+	ssl_protocols           TLSv1.2 TLSv1.3;
+	ssl_ciphers             HIGH:!aNULL:!MD5;
+	ssl_prefer_server_ciphers on;
+	add_header Strict-Transport-Security "max-age=31536000";
 
-    ssl_certificate /etc/certs/tls.crt;
-    ssl_certificate_key /etc/certs/tls.key;
+	ssl_certificate /etc/certs/tls.crt;
+	ssl_certificate_key /etc/certs/tls.key;
 
-    ssl_client_certificate  /etc/nginx/client_certs/ca.crt;
-    ssl_verify_client       optional;
-    ssl_verify_depth        2;
+	ssl_client_certificate  /etc/nginx/client_certs/ca.crt;
+	ssl_verify_client       optional;
+	ssl_verify_depth        2;
 
+	location /mock {
+		proxy_pass  http://localhost:5000;
+	}
 
-    location /mockmtls {
-	if ($ssl_client_verify != SUCCESS) { return 403; }
+	location /mockmtls {
+		if ($ssl_client_verify != SUCCESS) { return 403; }
 
-	proxy_set_header     SSL_Client_Issuer $ssl_client_i_dn;
-	proxy_set_header     SSL_Client $ssl_client_s_dn;
-	proxy_set_header     SSL_Client_Verify $ssl_client_verify;
+		proxy_set_header     SSL_Client_Issuer $ssl_client_i_dn;
+		proxy_set_header     SSL_Client $ssl_client_s_dn;
+		proxy_set_header     SSL_Client_Verify $ssl_client_verify;
 
-	proxy_pass  http://localhost:5000;
-    }
+		proxy_pass  http://localhost:5000;
+	}
 }
 ```
 
 ### test with curl
 
 ```
-curl https://localhost \
+URL=https://$SITENAME/mockmtls
+curl $URL \
   --cacert ca.crt \
   --key client.key \
   --cert client.crt
