@@ -48,7 +48,7 @@ app.get('/mockmtls', function (req, res) {
 
     var r = Math.random() * (delay - 30) + 30;
 
-    console.log('/mock from=' + ip + ', sslClientIssuer=' + sslClientIssuer + ', sslClient=' + sslClient + ', sslClientVerify=' + sslClientVerify + ', delay=' + r);
+    console.log('/mockmtls from=' + ip + ', sslClientIssuer=' + sslClientIssuer + ', sslClient=' + sslClient + ', sslClientVerify=' + sslClientVerify + ', delay=' + r);
                          
     setTimeout(function() {
         var response = {

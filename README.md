@@ -125,7 +125,7 @@ server {
 
 ```
 URL=https://$SITENAME/mockmtls
-curl $URL \
+curl -v $URL \
   --cacert ca.crt \
   --key client.key \
   --cert client.crt
